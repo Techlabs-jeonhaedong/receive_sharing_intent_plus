@@ -30,7 +30,7 @@ private const val EVENTS_CHANNEL_MEDIA = "receive_sharing_intent_plus/events-med
 private const val EVENTS_CHANNEL_TEXT = "receive_sharing_intent_plus/events-text"
 
 class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallHandler,
-        EventChannel.StreamHandler, NewIntentListener {
+        EventChannel.StreamHandler, NewIntentListener  {
 
     private var initialMedia: JSONArray? = null
     private var latestMedia: JSONArray? = null
@@ -43,7 +43,6 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
 
     private var binding: ActivityPluginBinding? = null
     private lateinit var applicationContext: Context
-
     private fun setupCallbackChannels(binaryMessenger: BinaryMessenger) {
         val mChannel = MethodChannel(binaryMessenger, MESSAGES_CHANNEL)
         mChannel.setMethodCallHandler(this)
@@ -121,6 +120,7 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
                     && (intent.action == Intent.ACTION_SEND
                     || intent.action == Intent.ACTION_SEND_MULTIPLE) -> { // Sharing images or videos
 
+                Toast.makeText(this.applicationContext, "패럿에 담는 중이예요!", Toast.LENGTH_SHORT).show()
 
                 val value = getMediaUris(intent)
                 if (initial) initialMedia = value
@@ -129,6 +129,7 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
             }
             (intent.type == null || intent.type?.startsWith("text") == true)
                     && intent.action == Intent.ACTION_SEND -> { // Sharing text
+                Toast.makeText(this.applicationContext, "패럿에 담는 중이예요!", Toast.LENGTH_SHORT).show()
 
                 val value = intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (initial) initialText = value
@@ -137,6 +138,7 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
             }
             intent.action == Intent.ACTION_VIEW -> { // Opening URL
 
+                Toast.makeText(this.applicationContext, "패럿에 담는 중이예요!", Toast.LENGTH_SHORT).show()
                 val value = intent.dataString
                 if (initial) initialText = value
                 latestText = value
@@ -243,7 +245,6 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
     }
 
     override fun onNewIntent(intent: Intent): Boolean {
-        Toast.makeText(this.applicationContext, "패럿에 담는 중이예요!", Toast.LENGTH_SHORT).show()
         handleIntent(intent, false)
         return false
     }
