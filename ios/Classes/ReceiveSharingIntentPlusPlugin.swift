@@ -7,7 +7,7 @@ public class SwiftReceiveSharingIntentPlusPlugin: NSObject, FlutterPlugin, Flutt
     static let kEventsChannelMedia = "receive_sharing_intent_plus/events-media"
     static let kEventsChannelLink = "receive_sharing_intent_plus/events-text"
 
-    private var customSchemePrefix = "ShareMedia"
+    private var customSchemePrefix = "ParotShare"
 
     private var initialMedia: [SharedMediaFile]? = nil
     private var latestMedia: [SharedMediaFile]? = nil
