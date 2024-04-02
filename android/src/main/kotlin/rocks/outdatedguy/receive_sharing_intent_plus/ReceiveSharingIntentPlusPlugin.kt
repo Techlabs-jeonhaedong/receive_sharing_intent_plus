@@ -23,6 +23,7 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URLConnection
+import android.widget.Toast
 
 private const val MESSAGES_CHANNEL = "receive_sharing_intent_plus/messages"
 private const val EVENTS_CHANNEL_MEDIA = "receive_sharing_intent_plus/events-media"
@@ -64,8 +65,12 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
         when (arguments) {
-            "media" -> eventSinkMedia = events
-            "text" -> eventSinkText = events
+            "media" -> {
+                eventSinkMedia = events
+            }
+            "text" ->{
+                eventSinkText = events
+            }
         }
     }
 
@@ -116,6 +121,7 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
                     && (intent.action == Intent.ACTION_SEND
                     || intent.action == Intent.ACTION_SEND_MULTIPLE) -> { // Sharing images or videos
 
+
                 val value = getMediaUris(intent)
                 if (initial) initialMedia = value
                 latestMedia = value
@@ -123,12 +129,14 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
             }
             (intent.type == null || intent.type?.startsWith("text") == true)
                     && intent.action == Intent.ACTION_SEND -> { // Sharing text
+
                 val value = intent.getStringExtra(Intent.EXTRA_TEXT)
                 if (initial) initialText = value
                 latestText = value
                 eventSinkText?.success(latestText)
             }
             intent.action == Intent.ACTION_VIEW -> { // Opening URL
+
                 val value = intent.dataString
                 if (initial) initialText = value
                 latestText = value
@@ -213,9 +221,11 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
         IMAGE, VIDEO, FILE;
     }
 
+
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.binding = binding
         binding.addOnNewIntentListener(this)
+
         handleIntent(binding.activity.intent, true)
     }
 
@@ -233,6 +243,7 @@ class ReceiveSharingIntentPlusPlugin : FlutterPlugin, ActivityAware, MethodCallH
     }
 
     override fun onNewIntent(intent: Intent): Boolean {
+        Toast.makeText(this.applicationContext, "패럿에 담는 중이예요!", Toast.LENGTH_SHORT).show()
         handleIntent(intent, false)
         return false
     }
